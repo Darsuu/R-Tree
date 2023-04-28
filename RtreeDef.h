@@ -25,17 +25,16 @@ typedef struct entry {
 }Entry;
 
 typedef struct rtreeleafnode {
+    MBR mbr;
     Entry entries[M];
-    RTreeLeafNode *parent;
+    RTreeNode *parent;
     bool isLeaf;
-}RTreeLeafNode;
-
-typedef struct rtreeinteralnode {
-    MBR Mbr;
     union children {
-        RTreeLeafNode *leafChildren[M];
-        RTreeInternalNode *internalChildren[M];
+        RTreeNode *leafChildren[M];
+        RTreeNode *internalChildren[M];
     } Children;
-}RTreeInternalNode;
+}RTreeNode;
 
 #endif
+
+
