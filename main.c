@@ -5,10 +5,11 @@
 #include "Rtree.h"
 #define BUFFERLEN 100
 
-RTreeNode *root;
+RTreeNode *root; // Global Root Node of R-Tree
 int main(void)
 {
     root = createNode();
+    root->isLeaf = true;
     FILE* fp = fopen("data.txt", "r");
     char* token;
     char tempBuffer[BUFFERLEN];
@@ -20,13 +21,11 @@ int main(void)
         entry.point.x = atoi(token);
         entry.mbr.x1 = atoi(token);
         entry.mbr.x2 = atoi(token);
-        //printf("x coordinate is %s\n", token);
         token = strtok(NULL, " ");
-        //printf("y coordinate is %s\n", token);
         entry.point.y = atoi(token);
         entry.mbr.y1 = atoi(token);
         entry.mbr.y2 = atoi(token);
-
+        insertEntry(entry, root);
     }
     
 

@@ -22,17 +22,19 @@ typedef struct point{
 typedef struct entry {
     MBR mbr;
     Point point;
+    int init;
 }Entry;
 
-typedef struct rtreeleafnode {
+typedef struct childentry{
     MBR mbr;
-    Entry entries[M];
-    RTreeNode *parent;
-    bool isLeaf;
-    union children {
-        RTreeNode *leafChildren[M];
-        RTreeNode *internalChildren[M];
-    } Children;
+    struct rtreeleafnode* child;
+}childEntry;
+
+typedef struct rtreeleafnode {
+    Entry entries[M]; // Needed in leaf
+    struct rtreeleafnode* parent; // Needed in internal node
+    bool isLeaf; // Needed in internal node
+    childEntry children[M]; 
 }RTreeNode;
 
 #endif
