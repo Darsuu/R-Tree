@@ -3,6 +3,9 @@
 
 #include "RtreeDef.h"
 
+RTreeNode *createNode();
+RTreeNode *chooseLeaf(Entry e);
+void printTree(RTreeNode *root);
 
 
 
