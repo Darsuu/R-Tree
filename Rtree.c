@@ -591,9 +591,9 @@ splitNodes splitInternalNode(RTreeNode *node, childEntry entry) {
     // Update mbrs so that enlargement can be accurately calculated
     for(int i = 0; i < M + 1; i++) 
     { 
-        if (tempEntries[i].child == NULL) {
-            continue;
-        }
+        // if (tempEntries[i].child == NULL) {
+        //     continue;
+        // }
         int ecount1 = getChildCount(node);
         int ecount2 = getChildCount(newNode);
         // printf("ec1 %d\n", ecount1);
@@ -602,25 +602,27 @@ splitNodes splitInternalNode(RTreeNode *node, childEntry entry) {
         {
             for(int k = 0; k<M+1; k++)
             {
-                if(tempEntries[i].child != NULL)
+                if(tempEntries[k].child != NULL)
                 {
-                    addchildEntry(node, tempEntries[i]);
+                    addchildEntry(node, tempEntries[k]);
                     entryNumber--;
-                    tempEntries[i].child = NULL;
+                    tempEntries[k].child = NULL;
                 }
             }
+            break;
         }
         else if(m-ecount2 == entryNumber)
         {
             for(int k = 0; k<M+1; k++)
             {
-                if(tempEntries[i].child != NULL)
+                if(tempEntries[k].child != NULL)
                 {
-                    addchildEntry(newNode, tempEntries[i]);
+                    addchildEntry(newNode, tempEntries[k]);
                     entryNumber--;
-                    tempEntries[i].child = NULL;
+                    tempEntries[k].child = NULL;
                 }
             }
+            break;
         }
         else
         {
