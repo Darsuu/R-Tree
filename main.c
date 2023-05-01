@@ -5,7 +5,9 @@
 #include "Rtree.h"
 #define BUFFERLEN 100
 
+void preOrderTraversal(RTreeNode* root, int level);
 RTreeNode *root; // Global Root Node of R-Tree
+
 int main(void)
 {
     root = createNode();
@@ -25,31 +27,57 @@ int main(void)
         entry.point.y = atoi(token);
         entry.mbr.y1 = atoi(token);
         entry.mbr.y2 = atoi(token);
+        entry.isEmpty = 0;
+        //printf("%d %d\n", entry.point.x, entry.point.y);
         insertEntry(entry, root);
     }
-    
-
+    preOrderTraversal(root, 0);
+    //fflush(stdout);
+    //printf("(%d, %d) (%d, %d)\n", root->children[0].child->entries[2].mbr.x2, root->children[0].child->entries[2].mbr.y2, root->children[0].child->entries[2].mbr.x1, root->children[0].child->entries[2].mbr.y1);
+    // printf("2D Object is (%d, %d)\n", root->children[0].child->entries[0].point.x, root->children[0].child->entries[0].point.y);
+    // printf("2D Object is (%d, %d)\n", root->children[0].child->entries[1].point.x, root->children[0].child->entries[1].point.y);
+    // printf("2D Object is (%d, %d)\n", root->children[1].child->entries[0].point.x, root->children[1].child->entries[0].point.y);
+    // printf("2D Object is (%d, %d)\n", root->children[1].child->entries[1].point.x, root->children[1].child->entries[1].point.y);
+    // printf("2D Object is (%d, %d)\n", root->children[2].child->entries[0].point.x, root->children[2].child->entries[0].point.y);
+    // printf("2D Object is (%d, %d)\n", root->children[2].child->entries[1].point.x, root->children[2].child->entries[1].point.y);
+    //printf("2D Object is (%d, %d)\n", root->children[1].child->entries[1].point.x, root->children[1].child->entries[1].point.y);
+    //printf("2D Object is (%d, %d)\n", root->children[1].child->entries[1].point.x, root->children[1].child->entries[1].point.y);
+    // for (int i = 0; i < M; i++) {
+    //     printf("%d\n", root->children[0].child->entries[i].isEmpty);
+    // }
     fclose(fp);
     return 0;
 }
 
-// void preOrderTraversal(RTreeNode* root, int level)
-// {
-//     if(root == NULL) return;
+void preOrderTraversal(RTreeNode* root, int level)
+{
+    if(root == NULL) return;
 
-//     for(int i = 0; i<M; i++)
-//     {
-//         if(root->entries[i].isEmpty == 0)
-//         {
-//             if(root->isLeaf)
-//             {
-//                 printf("Level %d: Current Node is leaf\n", level);
-//             }
-//             else
-//             {
-//                 printf("Level %d: Current Node is internal node\n", level);
-//             }
-//         }
-//     }
-// }
+    for(int i = 0; i<M; i++)
+    {
+        if(root->isLeaf)
+        {
+            if(root->entries[i].isEmpty == 0)
+            {
+                for(int k = 0; k<level; k++) printf("\t");
+                printf("Level %d: Current Node is leaf with index %d\n", level, i);
+                for(int k = 0; k<level; k++) printf("\t");
+                printf("2D Object is (%d, %d)\n", root->entries[i].point.x, root->entries[i].point.y);
+                // preOrderTraversal(root->children[0].child, level+1);
+            }
+        }
+        else
+        {
+            if(root->children[i].child != NULL)
+            {
+                for(int k = 0; k<level; k++) printf("\t");
+                printf("Level %d: Current Node is internal node with index %d\n", level, i);
+                for(int k = 0; k<level; k++) printf("\t");
+                printf("MBR is Top right:(%d, %d) Bottom left:(%d, %d))\n", root->children[i].mbr.x2, root->children[i].mbr.y2, root->children[i].mbr.x1, root->children[i].mbr.y1);
+                // if(root->children[i].child == NULL) printf("is null\n");
+                preOrderTraversal(root->children[i].child, level+1);
 
+            }
+        }
+    }
+}

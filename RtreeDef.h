@@ -46,6 +46,9 @@ typedef struct twinentries {
     Entry entry1, entry2;
 }twinEntry;
 
+typedef struct twinchildentries {
+    childEntry entry1, entry2;
+}twinchildEntry;
 #endif
 
 
