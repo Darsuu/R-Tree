@@ -302,11 +302,11 @@ splitNodes splitNode(RTreeNode *node, Entry entry) {
         if (tempEntries[i].isEmpty == 1) {
             continue;
         }
-        printf("x is %d, y is %d\n", tempEntries[i].point.x, tempEntries[i].point.y);
+        // printf("x is %d, y is %d\n", tempEntries[i].point.x, tempEntries[i].point.y);
         int ecount1 = getEntryCount(node);
         int ecount2 = getEntryCount(newNode);
-        printf("Count of node is %d\n", ecount1);
-        printf("Count of newNode is %d\n", ecount2);
+        // printf("Count of node is %d\n", ecount1);
+        // printf("Count of newNode is %d\n", ecount2);
         if(m-ecount1 == entryNumber)
         {
             for(int k = 0; k<M+1; k++)
