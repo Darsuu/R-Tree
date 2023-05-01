@@ -22,7 +22,7 @@ typedef struct point{
 typedef struct entry {
     MBR mbr;
     Point point;
-    int init;
+    int isEmpty;
 }Entry;
 
 typedef struct childentry{
@@ -36,6 +36,15 @@ typedef struct rtreeleafnode {
     bool isLeaf; // Needed in internal node
     childEntry children[M]; 
 }RTreeNode;
+
+typedef struct splitnodes {
+    RTreeNode* original;
+    RTreeNode* new;
+}splitNodes;
+
+typedef struct twinentries {
+    Entry entry1, entry2;
+}twinEntry;
 
 #endif
 

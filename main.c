@@ -33,4 +33,23 @@ int main(void)
     return 0;
 }
 
+// void preOrderTraversal(RTreeNode* root, int level)
+// {
+//     if(root == NULL) return;
+
+//     for(int i = 0; i<M; i++)
+//     {
+//         if(root->entries[i].isEmpty == 0)
+//         {
+//             if(root->isLeaf)
+//             {
+//                 printf("Level %d: Current Node is leaf\n", level);
+//             }
+//             else
+//             {
+//                 printf("Level %d: Current Node is internal node\n", level);
+//             }
+//         }
+//     }
+// }
 
