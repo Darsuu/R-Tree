@@ -29,7 +29,9 @@ int main(void)
         entry.mbr.y2 = atoi(token);
         entry.isEmpty = 0;
         //printf("%d %d\n", entry.point.x, entry.point.y);
+        
         insertEntry(entry, root);
+       
     }
     preOrderTraversal(root, 0);
     //fflush(stdout);
@@ -42,9 +44,10 @@ int main(void)
     // printf("2D Object is (%d, %d)\n", root->children[2].child->entries[1].point.x, root->children[2].child->entries[1].point.y);
     //printf("2D Object is (%d, %d)\n", root->children[1].child->entries[1].point.x, root->children[1].child->entries[1].point.y);
     //printf("2D Object is (%d, %d)\n", root->children[1].child->entries[1].point.x, root->children[1].child->entries[1].point.y);
-    // for (int i = 0; i < M; i++) {
-    //     printf("%d\n", root->children[0].child->entries[i].isEmpty);
-    // }
+     for (int i = 0; i < M; i++) {
+        printf("%d val %d %d\n", root->children[1].child->children[0].child->entries[i].isEmpty, root->children[1].child->children[0].child->entries[i].point.x, root->children[1].child->children[0].child->entries[i].point.y);
+        fflush(stdout);
+        }
     fclose(fp);
     return 0;
 }

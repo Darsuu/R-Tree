@@ -184,11 +184,13 @@ int pickNextAux(MBR mbr, int x, int y)
     int tempArea;
     if(x <= mbr.x2 && x >= mbr.x1)
     {   
-        tempArea = min(abs(y - mbr.y2), abs(y - mbr.y1)) * (mbr.x2 - mbr.x1);
+        if( x== mbr.x2 && x == mbr.x1) tempArea = 0;
+        else tempArea = min(abs(y - mbr.y2), abs(y - mbr.y1)) * (mbr.x2 - mbr.x1);
     }
     else if(y <= mbr.y2 && y >= mbr.y1)
     {
-        tempArea = min(abs(x - mbr.x2), abs(x - mbr.x1)) * (mbr.x2 - mbr.x1);
+        if( y== mbr.y2 && y == mbr.y1) tempArea = 0;
+        else tempArea = min(abs(x - mbr.x2), abs(x - mbr.x1)) * (mbr.x2 - mbr.x1);
     }
     else // Take abs
     {
@@ -311,7 +313,9 @@ RTreeNode *chooseLeaf(Entry entry, RTreeNode *root)
         {
             if(x <= currNodeEntry.mbr.x2 && x >= currNodeEntry.mbr.x1)
             {   
-                int tempArea = min(abs(y - currNodeEntry.mbr.y2), abs(y - currNodeEntry.mbr.y1)) * (currNodeEntry.mbr.x2 - currNodeEntry.mbr.x1);
+                int tempArea;
+                if( x == currNodeEntry.mbr.x2 && x == currNodeEntry.mbr.x1) tempArea = 0;
+                else tempArea = min(abs(y - currNodeEntry.mbr.y2), abs(y - currNodeEntry.mbr.y1)) * (currNodeEntry.mbr.x2 - currNodeEntry.mbr.x1);
                 if(minEnlarge > tempArea)
                 {
                     minEnlarge = tempArea;
@@ -325,7 +329,9 @@ RTreeNode *chooseLeaf(Entry entry, RTreeNode *root)
             }
             else if(y <= currNodeEntry.mbr.y2 && y >= currNodeEntry.mbr.y1)
             {
-                int tempArea = min(abs(x - currNodeEntry.mbr.x2), abs(x - currNodeEntry.mbr.x1)) * (currNodeEntry.mbr.x2 - currNodeEntry.mbr.x1);
+                int tempArea;
+                if( y== currNodeEntry.mbr.y2 && y == currNodeEntry.mbr.y1) tempArea = 0;
+                else tempArea = min(abs(x - currNodeEntry.mbr.x2), abs(x - currNodeEntry.mbr.x1)) * (currNodeEntry.mbr.x2 - currNodeEntry.mbr.x1);
                 if(minEnlarge > tempArea)
                 {
                     minEnlarge = tempArea;
@@ -375,46 +381,56 @@ splitNodes splitNode(RTreeNode *node, Entry entry) {
     // Populated first 2 entries and created 2 groups
     addEntry(node, entryPair.entry1);
     addEntry(newNode, entryPair.entry2);
- 
+
+
     int entryNumber = M-1; // Here we have M-1 entries in tempEntries
 
     // Update mbrs so that enlargement can be accurately calculated
     for(int i = 0; i < M + 1; i++) 
     { 
-        if (tempEntries[i].isEmpty == 1) {
-            continue;
-        }
+        printf("%d???\n", i);
+        // if (tempEntries[i].isEmpty == 1) {
+        //     continue;
+        // }
 
         int ecount1 = getEntryCount(node);
         int ecount2 = getEntryCount(newNode);
+        
         if(m-ecount1 == entryNumber)
         {
             for(int k = 0; k<M+1; k++)
             {
-                if(tempEntries[i].isEmpty == 0)
+                if(tempEntries[k].isEmpty == 0)
                 {
-                    addEntry(node, tempEntries[i]);
+                    addEntry(node, tempEntries[k]);
                     entryNumber--;
-                    tempEntries[i].isEmpty = 1;
+                    tempEntries[k].isEmpty = 1;
                 }
             }
+            break;
         }
         else if(m-ecount2 == entryNumber)
         {
             for(int k = 0; k<M+1; k++)
             {
-                if(tempEntries[i].isEmpty == 0)
+                if(tempEntries[k].isEmpty == 0)
                 {
-                    addEntry(newNode, tempEntries[i]);
+                    addEntry(newNode, tempEntries[k]);
                     entryNumber--;
-                    tempEntries[i].isEmpty = 1;
+                    tempEntries[k].isEmpty = 1;
                 }
             }
+            break;
         }
         else
         {
+            
             pickNext(tempEntries, node, newNode);
             entryNumber--;
+            //  for(int k = 0; k<M+1; k++)
+            // {
+            //     printf("%d\t", tempEntries[k].isEmpty);
+            // }
         }
     }
 
@@ -470,6 +486,7 @@ void pickNext(Entry *pickEntries, RTreeNode *node, RTreeNode *newNode)
     RTreeNode* tempNode = NULL;
     for(int i = 0; i<M+1; i++)
     {
+        printf("picknext: %d %d isEmpty: %d\n", pickEntries[i].point.x, pickEntries[i].point.y, pickEntries[i].isEmpty);
         if(pickEntries[i].isEmpty == 0)
         {
             int x = pickEntries[i].point.x;
@@ -480,16 +497,20 @@ void pickNext(Entry *pickEntries, RTreeNode *node, RTreeNode *newNode)
 
             int d1 = pickNextAux(mbrNode, x, y);
             int d2 = pickNextAux(mbrNewNode, x, y);
-
+            printf("d1 %d %d\n", d1, d2);
             if(maxDiff < abs(d1-d2))
             {
                 maxDiff = abs(d1 - d2);
                 entryIndex = i;
+                
                 if((d1 - d2)> 0)
                 {
                     tempNode = newNode;
                 } 
-                else tempNode = node;
+                else 
+                {
+                    tempNode = node;
+                }
             }   
         }
     }
