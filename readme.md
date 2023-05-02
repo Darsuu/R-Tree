@@ -10,5 +10,5 @@
 2020A7PS0037P Abhay Narendran
 2020B3A70779P Archisha Metha
 2020A7PS1214P Darshan Abhaykumar
-2020B1A71602P Salondi Bhandari
-2002B3A70817P Shrestha Sharma
+2020B1A71602P Saloni Bhandari
+2020B3A70817P Shrestha Sharma

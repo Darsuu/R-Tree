@@ -480,7 +480,7 @@ RTreeNode *chooseLeaf(Entry entry, RTreeNode *root) // Function returns the node
                     if(temp != NULL) nextNode = temp;
                 }
             }
-            else // Take abs
+            else
             {
                 // CASE WHEN:   
                 //                |          | .(X,Y)
