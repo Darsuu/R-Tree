@@ -235,8 +235,9 @@ void insertEntry(Entry entry, RTreeNode *root)
         printf("Error root is null\n");
         return;
     }
-
     RTreeNode* leaf = chooseLeaf(entry, root);
+    //printf("%d %d\n", entry.point.x, entry.point.y);
+
     if(leaf == NULL) 
     {
         printf("bruh");
@@ -244,7 +245,7 @@ void insertEntry(Entry entry, RTreeNode *root)
         return;
     }
     int entryCount = getEntryCount(leaf);
-    // printf("e1 is %d\n", entryCount);
+    //printf("e1 is %d\n", entryCount);
     
     // for(int i = 0; i<M; i++)
     // {
@@ -259,6 +260,7 @@ void insertEntry(Entry entry, RTreeNode *root)
     if(entryCount < M)
     {
         leaf->entries[entryCount] = entry;
+        //printf("Before adjust, %d %d\n", entry.point.x, entry.point.y);
         AdjustTree(leaf, NULL);
     }
     else // Call & SplitNode()
@@ -284,7 +286,7 @@ void insertEntry(Entry entry, RTreeNode *root)
 
 RTreeNode *chooseLeaf(Entry entry, RTreeNode *root)
 {
-    if(root->isLeaf) { /*printf("found\n");*/ return root; }
+    if(root->isLeaf) { /*printf("found ");*/ return root; }
 
     RTreeNode* nextNode;
     int minEnlarge = 9999999;
@@ -388,7 +390,7 @@ splitNodes splitNode(RTreeNode *node, Entry entry) {
     // Update mbrs so that enlargement can be accurately calculated
     for(int i = 0; i < M + 1; i++) 
     { 
-        printf("%d???\n", i);
+        //printf("%d???\n", i);
         // if (tempEntries[i].isEmpty == 1) {
         //     continue;
         // }
@@ -446,7 +448,7 @@ splitNodes splitNode(RTreeNode *node, Entry entry) {
     // for (int i = 0; i < n2; i++) {
     //     printf("%d %d\n", newNode->entries[i].point.x, newNode->entries[i].point.y);
     // }
-    // printf("\n");
+    // printf("--------------------------------------------------------------------\n");
     return res;
 }
 
@@ -486,7 +488,7 @@ void pickNext(Entry *pickEntries, RTreeNode *node, RTreeNode *newNode)
     RTreeNode* tempNode = NULL;
     for(int i = 0; i<M+1; i++)
     {
-        printf("picknext: %d %d isEmpty: %d\n", pickEntries[i].point.x, pickEntries[i].point.y, pickEntries[i].isEmpty);
+        //printf("picknext: %d %d isEmpty: %d\n", pickEntries[i].point.x, pickEntries[i].point.y, pickEntries[i].isEmpty);
         if(pickEntries[i].isEmpty == 0)
         {
             int x = pickEntries[i].point.x;
@@ -497,7 +499,7 @@ void pickNext(Entry *pickEntries, RTreeNode *node, RTreeNode *newNode)
 
             int d1 = pickNextAux(mbrNode, x, y);
             int d2 = pickNextAux(mbrNewNode, x, y);
-            printf("d1 %d %d\n", d1, d2);
+            //printf("d1 %d %d\n", d1, d2);
             if(maxDiff < abs(d1-d2))
             {
                 maxDiff = abs(d1 - d2);
@@ -517,7 +519,7 @@ void pickNext(Entry *pickEntries, RTreeNode *node, RTreeNode *newNode)
 
     // tempNode contains the the node with the minEnlargement so add it to that node
     // entryIndex contains the entry which creates maxDiff
-    printf("i %d %d\n", pickEntries[entryIndex].point.x,  pickEntries[entryIndex].point.y );
+   // printf("i %d %d\n", pickEntries[entryIndex].point.x,  pickEntries[entryIndex].point.y );
     addEntry(tempNode, pickEntries[entryIndex]);
     pickEntries[entryIndex].isEmpty = 1;
 }
@@ -527,14 +529,23 @@ void pickNextInternal(childEntry *pickEntries, RTreeNode *node, RTreeNode *newNo
     int maxDiff = -1;
     int entryIndex = -1;
     RTreeNode* tempNode = NULL;
+    
     for(int i = 0; i<M+1; i++)
     {
+        // for (int j = 0; j < M + 1; j++) {
+        //     if (pickEntries[j].child == NULL){
+        //         printf("This is Null\n");
+        //     }
+        //     else
+        //     printf("TR: %d %d BL: %d %d\n", pickEntries[j].mbr.x2, pickEntries[j].mbr.y2, pickEntries[j].mbr.x1, pickEntries[j].mbr.y1);
+        // }
         if(pickEntries[i].child != NULL)
         {
 
             MBR mbrNode = calcMbr(node);
+            //printf("Node MBR: %d %d %d %d\n", mbrNode.x2, mbrNode.y2, mbrNode.x1, mbrNode.y1);
             MBR mbrNewNode = calcMbr(newNode);
-
+            //printf("NewNode MBR: %d %d %d %d\n", mbrNewNode.x2, mbrNewNode.y2, mbrNewNode.x1, mbrNewNode.y1);
             int areaChild1 = getArea(pickEntries[i]);
 
             int x1 = min(pickEntries[i].mbr.x1, mbrNode.x1);
@@ -563,8 +574,27 @@ void pickNextInternal(childEntry *pickEntries, RTreeNode *node, RTreeNode *newNo
 
     // tempNode contains the the node with the minEnlargement so add it to that node
     // entryIndex contains the entry which creates maxDiff
+    //printf("Inserted TR: %d %d, BL: %d, %d\n", pickEntries[entryIndex].mbr.x2, pickEntries[entryIndex].mbr.y2, pickEntries[entryIndex].mbr.x1, pickEntries[entryIndex].mbr.y1);
+    int c = getChildCount(tempNode);
     addchildEntry(tempNode, pickEntries[entryIndex]);
+    tempNode->children[c].child->parent = tempNode;
     pickEntries[entryIndex].child = NULL;
+    // int n1 = getChildCount(node);
+    // int n2 = getChildCount(newNode);
+    // for (int i = 0; i < n1; i++) {
+    //     printf("NODE: %d %d %d %d\n", node->children[i].mbr.x2, node->children[i].mbr.y2, node->children[i].mbr.x1, node->children[i].mbr.y1);
+    //     if (node->children[i].child == NULL){
+    //         printf("Null child\n");
+    //     }
+    // }
+    // printf("\n");
+    // for (int i = 0; i < n2; i++) {
+    //     printf("NEWNODE: %d %d %d %d\n", newNode->children[i].mbr.x2, newNode->children[i].mbr.y2, newNode->children[i].mbr.x1, newNode->children[i].mbr.y1);
+    //     if (newNode->children[i].child == NULL){
+    //         printf("Null child\n");
+    //     }
+    // }
+    // printf("--------------------------------------------------------------------\n");
 }
 
 
@@ -574,10 +604,10 @@ splitNodes splitInternalNode(RTreeNode *node, childEntry entry) {
     {
         tempEntries[i] = node->children[i];
         node->entries[i].isEmpty = 1;
+        node->children[i].child = NULL;
     }
     tempEntries[M] = entry;
-    tempEntries[M].child = NULL;
-
+    //tempEntries[M].child = NULL;
     twinchildEntry entryPair = pickSeedsInternal(tempEntries); // Change isEmpty value to 1 (done)
     RTreeNode *newNode = createNode();
     newNode->isLeaf = false;
@@ -634,6 +664,16 @@ splitNodes splitInternalNode(RTreeNode *node, childEntry entry) {
     splitNodes res;
     res.new = newNode;
     res.original = node;
+    // int n1 = getChildCount(node);
+    // int n2 = getChildCount(newNode);
+    // for (int i = 0; i < n1; i++) {
+    //     printf("TR: %d %d BL: %d %d\n", node->children[i].mbr.x2, node->children[i].mbr.y2, node->children[i].mbr.x1, node->children[i].mbr.y1);
+    // }
+    // printf("\n");
+    // for (int i = 0; i < n2; i++) {
+    //     printf("TR: %d %d BL: %d %d\n", newNode->children[i].mbr.x2, newNode->children[i].mbr.y2, newNode->children[i].mbr.x1, newNode->children[i].mbr.y1);   
+    // }
+    // printf("--------------------------------------------------------------------\n");
     return res;
 }
 
@@ -682,6 +722,10 @@ void AdjustTree(RTreeNode* node, RTreeNode* splitNode)//split took place so we h
 { 
     
     RTreeNode *parentNode = node->parent;
+    // printf("hi\n");
+    // if (parentNode == NULL) {
+    //     printf("Null parent\n");
+    // }
     
     //stop if N is the root
 
@@ -735,13 +779,21 @@ void AdjustTree(RTreeNode* node, RTreeNode* splitNode)//split took place so we h
         childEntry newEntry;
         newEntry.child = splitNode;
         newEntry.mbr = calcMbr(splitNode);
+
         int child_count = getChildCount(parentNode);
         if(child_count == M)
         {
+            // for(int i = 0; i < 2; i++) {
+            //     printf("Entries %d %d\n", newEntry.child->entries[i].point.x, newEntry.child->entries[i].point.y);
+            // }
+            //printf("NewEntry %d %d %d %d\n", newEntry.mbr.x2, newEntry.mbr.y2, newEntry.mbr.x1, newEntry.mbr.y1);
             // for (int i = 0; i < M; i++) {
             //     printf("%d \n", parentNode->entries[i].isEmpty);
             // }
             // printf("here\n");
+            // for (int k = 0; k < M; k++) {
+            //     printf("Entry %d: %d %d %d %d\n", k, parentNode->children[k].mbr.x2, parentNode->children[k].mbr.y2, parentNode->children[k].mbr.x1, parentNode->children[k].mbr.y1);
+            // }
             splitNodes tempNodes = splitInternalNode(parentNode, newEntry);
             AdjustTree(tempNodes.original, tempNodes.new);
         }
